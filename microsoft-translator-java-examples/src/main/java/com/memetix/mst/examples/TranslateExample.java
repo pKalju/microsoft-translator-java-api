@@ -26,12 +26,22 @@ import com.memetix.mst.translate.Translate;
  * @author griggs.jonathan
  * @date Jun 1, 2011
  */
-public class HelloWorld 
+public class TranslateExample 
 {
-    public static void main( String[] args ) throws Exception
-    {
+    public static void main( String[] args ) throws Exception {
+        // Set the API key once per JVM. It is set statically and applies to all services
         Translate.setKey("YOUR_API_KEY_HERE");
+        
+        // From French -> English 
         String translatedText = Translate.execute("Bonjour le monde", Language.FRENCH, Language.ENGLISH);
-        System.out.println(translatedText);
+        System.out.println("French -> English : " + translatedText);
+        
+        // From English -> French - AUTO_DETECT the From Language
+        translatedText = Translate.execute("Hello world!",Language.FRENCH);
+        System.out.println("English AUTO_DETECT -> French: " + translatedText);
+        
+        // English AUTO_DETECT -> Arabic
+        translatedText = Translate.execute("Hello world, how are you doing?",Language.ARABIC);
+        System.out.println("English AUTO_DETECT -> Arabic: " + translatedText);
     }
 }
