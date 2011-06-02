@@ -27,6 +27,7 @@ import com.memetix.mst.language.Language;
  *
  * @author griggs.jonathan
  * @date Jun 1, 2011
+ * @since 0.3 June 1, 2011
  */
 public class DetectLanguageExample {
     public static void main( String[] args ) throws Exception

@@ -19,12 +19,13 @@ import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 
 /**
- * Hello world!
+ * TranslateExample
  * 
  * A short, sweet demo on how to translate a String using microsoft-translator-java-api
  * 
  * @author griggs.jonathan
  * @date Jun 1, 2011
+ * @since 0.3 June 1, 2011
  */
 public class TranslateExample 
 {

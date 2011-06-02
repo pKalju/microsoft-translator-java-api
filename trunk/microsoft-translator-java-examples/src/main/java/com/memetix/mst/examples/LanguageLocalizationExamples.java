@@ -26,6 +26,7 @@ import java.util.Map;
  * 
  * @author griggs.jonathan
  * @date Jun 1, 2011
+ * @since 0.3 June 1, 2011
  */
 public class LanguageLocalizationExamples {
     public static void main( String[] args ) throws Exception
