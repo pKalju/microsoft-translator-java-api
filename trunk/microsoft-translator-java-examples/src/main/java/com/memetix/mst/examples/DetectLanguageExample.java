@@ -20,7 +20,7 @@ import com.memetix.mst.language.Language;
 public class DetectLanguageExample {
     public static void main( String[] args ) throws Exception
     {
-        Detect.setKey("MY_API_KEY");
+        Detect.setKey("YOUR_API_KEY_HERE");
         
         //Detect returns a String representing the language code (Note: this should change in 0.4, it should return a full-blown Language enum instance)
         String detectedLanguage = Detect.execute("Bonjour le monde");
