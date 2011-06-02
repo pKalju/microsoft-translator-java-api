@@ -36,6 +36,7 @@ import javax.sound.sampled.LineListener;
  * 
  * @author griggs.jonathan
  * @date Jun 1, 2011
+ * @since 0.3 June 1, 2011
  */
 public class SpeakTextExample {
     
