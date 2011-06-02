@@ -54,22 +54,23 @@ public class LanguageLocalizationExamples {
             System.out.println(lang.getName(Language.FRENCH) + " : " + lang.toString());
         }
         
-        // This is a perfectly valid way to display language lists
-        // ...BUT...
-        // the list is not in alphabetical order once localized.
-        
-        /*  
-         *  The best way to get an alphabetized list of localized language names (for populating drop-down lists, maybe)
+        /*  This is a perfectly valid way to display language lists...
+         * 
+         *  ...BUT...
+         * 
+         *  ...the list is not in alphabetical order once localized.
+         * 
+         * 
+         *  The best way to get an alphabetized list of localized language names (to populate select lists, for example)
          *  is to call the Language.values() method, passing a locale.
          * 
-         *  NOTE: The following code will not work on less than 0.4-SNAPSHOT version
+         *  NOTE: The following code will only work with version 0.4 of the microsoft-translator-java-api library
          */
-        /*
+        
         System.out.println("\nLanguage Names localized to French AND in alphanumeric order\n");
         Map<String,Language> localizedMap = Language.values(Language.FRENCH);
         for(String langName : localizedMap.keySet()) {
             System.out.println(langName + " : " + localizedMap.get(langName).toString());
         }
-         */
     }
 }
