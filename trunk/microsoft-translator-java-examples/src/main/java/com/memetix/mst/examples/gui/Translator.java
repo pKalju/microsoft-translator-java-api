@@ -1,6 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2011 Jonathan Griggs <jonathan.griggs at gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /*
@@ -16,6 +27,9 @@ import com.memetix.mst.language.SpokenDialect;
 import com.memetix.mst.speak.Speak;
 import com.memetix.mst.translate.Translate;
 import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,10 +39,12 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineEvent.Type;
 import javax.sound.sampled.LineListener;
+import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 /**
@@ -39,8 +55,10 @@ public class Translator extends javax.swing.JFrame {
 
     /** Creates new form Translator */
     public Translator() {
+        // Don't forget to set the API KEY!
         Translate.setKey("YOUR_API_KEY_GOES_HERE");
         initComponents();
+        populateLocalizationMenu();
         populateLanguageComboBoxes();
     }
 
@@ -53,6 +71,7 @@ public class Translator extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        localizationGroup = new javax.swing.ButtonGroup();
         sourcePanel = new javax.swing.JPanel();
         sourceScrollPane = new javax.swing.JScrollPane();
         sourceText = new javax.swing.JTextArea();
@@ -72,14 +91,19 @@ public class Translator extends javax.swing.JFrame {
         targetLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        editMenu = new javax.swing.JMenu();
+        quitMenuItem = new javax.swing.JMenuItem();
+        localizationMenu = new javax.swing.JMenu();
+        helpMenu = new javax.swing.JMenu();
+        aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Microsoft Translator - Java API");
 
         sourceText.setColumns(20);
         sourceText.setLineWrap(true);
         sourceText.setRows(5);
         sourceText.setWrapStyleWord(true);
+        sourceText.setMargin(new java.awt.Insets(5, 5, 5, 5));
         sourceScrollPane.setViewportView(sourceText);
 
         sourceLabel.setText("Text to Translate");
@@ -216,6 +240,7 @@ public class Translator extends javax.swing.JFrame {
         targetText.setRows(5);
         targetText.setWrapStyleWord(true);
         targetText.setFocusable(false);
+        targetText.setMargin(new java.awt.Insets(5, 5, 5, 5));
         targetScrollPane.setViewportView(targetText);
 
         targetLabel.setText("Translated Text");
@@ -242,10 +267,32 @@ public class Translator extends javax.swing.JFrame {
         );
 
         fileMenu.setText("File");
+
+        quitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.ALT_MASK));
+        quitMenuItem.setText("Exit Translator");
+        quitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(quitMenuItem);
+
         menuBar.add(fileMenu);
 
-        editMenu.setText("Edit");
-        menuBar.add(editMenu);
+        localizationMenu.setText("Localization");
+        menuBar.add(localizationMenu);
+
+        helpMenu.setText("Help");
+
+        aboutMenuItem.setText("About Microsoft Translator - Java API");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(aboutMenuItem);
+
+        menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
 
@@ -296,6 +343,18 @@ public class Translator extends javax.swing.JFrame {
             }
         });
     }//GEN-LAST:event_detectButtonActionPerformed
+
+    private void quitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitMenuItemActionPerformed
+            System.exit(0);
+    }//GEN-LAST:event_quitMenuItemActionPerformed
+
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
+       JOptionPane.showMessageDialog(this, 
+               "Copyright 2011 - Jonathan Griggs <jonathan.griggs@gmail.com>\n\n"
+               + "Source Code:\n"
+               + "       http://github.com/boatmeme/microsoft-translator-java-api"
+               ,"About Microsoft Translator Java API", JOptionPane.PLAIN_MESSAGE);
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -383,6 +442,29 @@ public class Translator extends javax.swing.JFrame {
             speakDialectBox.setRenderer(new SpokenDialectRenderer());
     }
     
+    private void populateLocalizationMenu() {
+        try {
+            localizationGroup = new ButtonGroup();
+            for(Language lang : Language.values()) {
+                if(lang!=Language.AUTO_DETECT) {
+                    final JRadioButtonMenuItem item = new JRadioButtonMenuItem(lang.getName(locale));
+                    item.setActionCommand(lang.toString());
+                    item.addActionListener(localizationListener);
+                    localizationGroup.add(item);
+                    localizationMenu.add(item);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Rendering Language List: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    ActionListener localizationListener = new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            locale = Language.fromString(evt.getActionCommand());
+        }
+    };
+    
     class LanguageRenderer extends BasicComboBoxRenderer {
         @Override
         public Component getListCellRendererComponent(
@@ -396,7 +478,7 @@ public class Translator extends javax.swing.JFrame {
           if(value!=null) {
               Language item= (Language) value;
               try {
-                setText(item.getName(Language.ENGLISH));
+                setText(item.getName(locale));
               } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Rendering Language List: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
               }
@@ -418,7 +500,7 @@ public class Translator extends javax.swing.JFrame {
           if(value!=null) {
               SpokenDialect item= (SpokenDialect) value;
               try {
-                setText(item.getName(Language.ENGLISH));
+                setText(item.getName(locale));
               } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Rendering Language List: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
               }
@@ -427,13 +509,19 @@ public class Translator extends javax.swing.JFrame {
         }
     }
     
+    private Language locale = Language.ENGLISH;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JPanel controlPanel;
     private javax.swing.JButton detectButton;
     private javax.swing.JPanel detectPanel;
-    private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu helpMenu;
+    private javax.swing.ButtonGroup localizationGroup;
+    private javax.swing.JMenu localizationMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem quitMenuItem;
     private javax.swing.JLabel sourceLabel;
     private javax.swing.JPanel sourcePanel;
     private javax.swing.JScrollPane sourceScrollPane;
