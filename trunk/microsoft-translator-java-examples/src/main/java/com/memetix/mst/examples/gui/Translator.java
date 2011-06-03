@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/*
- * Translator.java
- *
- * Created on Jun 3, 2011, 11:43:04 AM
- */
 package com.memetix.mst.examples.gui;
 
 import com.memetix.mst.detect.Detect;
@@ -45,19 +39,26 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
-
-/**
- *
- * @author griggs.jonathan
+/*
+ * Translator
+ * 
+ * A full-blown Translation GUI app that demonstrates all of the examples
+ * and shows how an application might use the microsoft-translator-java-api 
+ * to dynamically localize itself
+ * 
+ * @author Jonathan Griggs <jonathan.griggs@gmail.com>
+ * @date Jun 3, 2011
+ * @since 0.4 June 3, 2011
  */
 public class Translator extends javax.swing.JFrame {
 
     /** Creates new form Translator */
     public Translator() {
         // Don't forget to set the API KEY!
-        Translate.setKey("YOUR_API_KEY_HERE");
+        Translate.setKey("YOUR_API_KEY_GOES_HERE");
         initComponents();
         populateLocalizationMenu();
+        localizeLabels();
         populateLanguageComboBoxes();
     }
 
@@ -406,7 +407,7 @@ public class Translator extends javax.swing.JFrame {
     
     private void detectLanguage() {
         try {
-            targetText.setText(Language.fromString(Detect.execute(sourceText.getText().trim())).getName(locale));
+            targetText.setText(Language.fromString(Detect.execute(sourceText.getText().trim())).getName(defaultLocale));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Detecting Language : " + ex.toString(),"Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -450,23 +451,32 @@ public class Translator extends javax.swing.JFrame {
             final ComboBoxModel lModel = new DefaultComboBoxModel(Language.values());
             translateLanguageBox.setModel(lModel);
             translateLanguageBox.setRenderer(new LanguageRenderer());
-            
+            // Remove AUTO_DETECT. We don't need or want it here
+            translateLanguageBox.removeItem(Language.AUTO_DETECT);
+            // Select the default
+            translateLanguageBox.setSelectedItem(defaultTranslationLanguage);
+           
             final ComboBoxModel dModel = new DefaultComboBoxModel(SpokenDialect.values());
             speakDialectBox.setModel(dModel);
             speakDialectBox.setRenderer(new SpokenDialectRenderer());
+            // Select the default
+            speakDialectBox.setSelectedItem(defaultDialect);
     }
     
     private void populateLocalizationMenu() {
         try {
             localizationGroup = new ButtonGroup();
+            localizationMenu.removeAll();
             for(Language lang : Language.values()) {
                 if(lang!=Language.AUTO_DETECT) {
-                    final JRadioButtonMenuItem item = new JRadioButtonMenuItem(lang.getName(locale));
+                    final JRadioButtonMenuItem item = new JRadioButtonMenuItem(lang.getName(defaultLocale));
                     item.setFont(defaultFont);
-                    item.setActionCommand(lang.toString());
+                                       item.setActionCommand(lang.toString());
                     item.addActionListener(localizationListener);
                     localizationGroup.add(item);
                     localizationMenu.add(item);
+                    if(lang==defaultLocale) {
+                        item.setSelected(true);;                   }
                 }
             }
         } catch (Exception e) {
@@ -476,10 +486,44 @@ public class Translator extends javax.swing.JFrame {
     
     ActionListener localizationListener = new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            locale = Language.fromString(evt.getActionCommand());
+            defaultLocale = Language.fromString(evt.getActionCommand());
+            populateLocalizationMenu();
+            localizeLabels();
             repaint();
         }
     };
+    
+    private void localizeLabels() {
+        String[] labels = {
+            LABEL_TRANSLATE_SOURCE,
+            LABEL_TRANSLATE_TARGET,
+            LABEL_TRANSLATE_BUTTON,
+            LABEL_DETECT_BUTTON,
+            LABEL_SPEAK_BUTTON,
+            LABEL_MENU_FILE,
+            LABEL_MENU_LOCALIZATION,
+            LABEL_MENU_HELP,
+            LABEL_MENU_EXIT,
+            LABEL_MENU_ABOUT
+        };
+        if(defaultLocale!=Language.ENGLISH) {
+            try {
+               labels = Translate.execute(labels, defaultLocale);
+            } catch(Exception e) {
+               JOptionPane.showMessageDialog(this, "Localizing Labels: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } 
+        sourceLabel.setText(labels[0]);
+        targetLabel.setText(labels[1]);
+        translateButton.setText(labels[2]);
+        detectButton.setText(labels[3]);
+        speakButton.setText(labels[4]);
+        fileMenu.setText(labels[5]);
+        localizationMenu.setText(labels[6]);
+        helpMenu.setText(labels[7]);
+        quitMenuItem.setText(labels[8]);
+        aboutMenuItem.setText(labels[9]);        
+    }
     
     class LanguageRenderer extends BasicComboBoxRenderer {
         @Override
@@ -494,7 +538,7 @@ public class Translator extends javax.swing.JFrame {
           if(value!=null) {
               Language item= (Language) value;
               try {
-                setText(item.getName(locale));
+                setText(item.getName(defaultLocale));
               } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Rendering Language List: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
               }
@@ -516,7 +560,7 @@ public class Translator extends javax.swing.JFrame {
           if(value!=null) {
               SpokenDialect item= (SpokenDialect) value;
               try {
-                setText(item.getName(locale));
+                setText(item.getName(defaultLocale));
               } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Rendering Language List: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
               }
@@ -524,9 +568,24 @@ public class Translator extends javax.swing.JFrame {
           return this;  
         }
     }
-    
-    private Language locale = Language.ENGLISH;
+   
+    //Defaults
+    private Language defaultLocale = Language.ENGLISH;
+    private Language defaultTranslationLanguage = Language.FRENCH;
+    private SpokenDialect defaultDialect = SpokenDialect.ENGLISH_INDIA;
     private Font defaultFont = new Font("Arial Unicode MS", 0, 12);
+   
+    // Default Labels
+    private final String LABEL_TRANSLATE_SOURCE     = "Source Text";
+    private final String LABEL_TRANSLATE_TARGET     = "Translation";
+    private final String LABEL_TRANSLATE_BUTTON     = "Translate to";
+    private final String LABEL_DETECT_BUTTON        = "Detect Language";
+    private final String LABEL_SPEAK_BUTTON         = "Detect Language";
+    private final String LABEL_MENU_FILE            = "File";
+    private final String LABEL_MENU_LOCALIZATION    = "Localization";
+    private final String LABEL_MENU_HELP            = "Help";
+    private final String LABEL_MENU_EXIT            = "Exit Translator";
+    private final String LABEL_MENU_ABOUT           = "About Microsoft Translator - Java API";
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
