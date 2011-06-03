@@ -27,9 +27,8 @@ import com.memetix.mst.language.SpokenDialect;
 import com.memetix.mst.speak.Speak;
 import com.memetix.mst.translate.Translate;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -56,7 +55,7 @@ public class Translator extends javax.swing.JFrame {
     /** Creates new form Translator */
     public Translator() {
         // Don't forget to set the API KEY!
-        Translate.setKey("YOUR_API_KEY_GOES_HERE");
+        Translate.setKey("YOUR_API_KEY_HERE");
         initComponents();
         populateLocalizationMenu();
         populateLanguageComboBoxes();
@@ -98,16 +97,20 @@ public class Translator extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Microsoft Translator - Java API");
+        setFont(new java.awt.Font("Arial Unicode MS", 0, 14)); // NOI18N
 
         sourceText.setColumns(20);
+        sourceText.setFont(new java.awt.Font("Arial Unicode MS", 0, 14)); // NOI18N
         sourceText.setLineWrap(true);
         sourceText.setRows(5);
         sourceText.setWrapStyleWord(true);
         sourceText.setMargin(new java.awt.Insets(5, 5, 5, 5));
         sourceScrollPane.setViewportView(sourceText);
 
+        sourceLabel.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         sourceLabel.setText("Text to Translate");
 
+        translateButton.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         translateButton.setText("Translate To");
         translateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,6 +118,7 @@ public class Translator extends javax.swing.JFrame {
             }
         });
 
+        translateLanguageBox.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         translateLanguageBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout translatePanelLayout = new javax.swing.GroupLayout(translatePanel);
@@ -134,6 +138,7 @@ public class Translator extends javax.swing.JFrame {
                 .addComponent(translateLanguageBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        speakButton.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         speakButton.setText("Speak Text");
         speakButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,6 +146,7 @@ public class Translator extends javax.swing.JFrame {
             }
         });
 
+        speakDialectBox.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         speakDialectBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout speakPanelLayout = new javax.swing.GroupLayout(speakPanel);
@@ -158,6 +164,7 @@ public class Translator extends javax.swing.JFrame {
                 .addComponent(speakDialectBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        detectButton.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         detectButton.setText("Detect Language");
         detectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -170,7 +177,7 @@ public class Translator extends javax.swing.JFrame {
         detectPanelLayout.setHorizontalGroup(
             detectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detectPanelLayout.createSequentialGroup()
-                .addContainerGap(136, Short.MAX_VALUE)
+                .addContainerGap(124, Short.MAX_VALUE)
                 .addComponent(detectButton)
                 .addGap(164, 164, 164))
         );
@@ -214,7 +221,7 @@ public class Translator extends javax.swing.JFrame {
                 .addGroup(sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(sourcePanelLayout.createSequentialGroup()
                         .addComponent(sourceLabel)
-                        .addContainerGap(644, Short.MAX_VALUE))
+                        .addContainerGap(637, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sourcePanelLayout.createSequentialGroup()
                         .addGroup(sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(sourceScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
@@ -236,6 +243,7 @@ public class Translator extends javax.swing.JFrame {
         targetText.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
         targetText.setColumns(20);
         targetText.setEditable(false);
+        targetText.setFont(new java.awt.Font("Arial Unicode MS", 0, 14)); // NOI18N
         targetText.setLineWrap(true);
         targetText.setRows(5);
         targetText.setWrapStyleWord(true);
@@ -243,6 +251,7 @@ public class Translator extends javax.swing.JFrame {
         targetText.setMargin(new java.awt.Insets(5, 5, 5, 5));
         targetScrollPane.setViewportView(targetText);
 
+        targetLabel.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         targetLabel.setText("Translated Text");
 
         javax.swing.GroupLayout targetPanelLayout = new javax.swing.GroupLayout(targetPanel);
@@ -262,13 +271,15 @@ public class Translator extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(targetLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(targetScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                .addComponent(targetScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         fileMenu.setText("File");
+        fileMenu.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
 
         quitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.ALT_MASK));
+        quitMenuItem.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         quitMenuItem.setText("Exit Translator");
         quitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -280,10 +291,13 @@ public class Translator extends javax.swing.JFrame {
         menuBar.add(fileMenu);
 
         localizationMenu.setText("Localization");
+        localizationMenu.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         menuBar.add(localizationMenu);
 
         helpMenu.setText("Help");
+        helpMenu.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
 
+        aboutMenuItem.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         aboutMenuItem.setText("About Microsoft Translator - Java API");
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -384,7 +398,7 @@ public class Translator extends javax.swing.JFrame {
     
     private void translateText() {
         try {
-            targetText.setText(Translate.execute(sourceText.getText().trim(), Language.ENGLISH, (Language)translateLanguageBox.getSelectedItem()));
+            targetText.setText(Translate.execute(sourceText.getText().trim(), Language.AUTO_DETECT, (Language)translateLanguageBox.getSelectedItem()));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Performing Localization : " + ex.toString(),"Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -392,7 +406,7 @@ public class Translator extends javax.swing.JFrame {
     
     private void detectLanguage() {
         try {
-            targetText.setText(Language.fromString(Detect.execute(sourceText.getText().trim())).getName(Language.ENGLISH));
+            targetText.setText(Language.fromString(Detect.execute(sourceText.getText().trim())).getName(locale));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Detecting Language : " + ex.toString(),"Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -448,6 +462,7 @@ public class Translator extends javax.swing.JFrame {
             for(Language lang : Language.values()) {
                 if(lang!=Language.AUTO_DETECT) {
                     final JRadioButtonMenuItem item = new JRadioButtonMenuItem(lang.getName(locale));
+                    item.setFont(defaultFont);
                     item.setActionCommand(lang.toString());
                     item.addActionListener(localizationListener);
                     localizationGroup.add(item);
@@ -462,6 +477,7 @@ public class Translator extends javax.swing.JFrame {
     ActionListener localizationListener = new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             locale = Language.fromString(evt.getActionCommand());
+            repaint();
         }
     };
     
@@ -510,6 +526,7 @@ public class Translator extends javax.swing.JFrame {
     }
     
     private Language locale = Language.ENGLISH;
+    private Font defaultFont = new Font("Arial Unicode MS", 0, 12);
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
