@@ -10,7 +10,8 @@
  */
 package com.memetix.mst.examples.gui;
 
-import com.memetix.mst.MicrosoftAPI;
+import com.memetix.mst.detect.Detect;
+import com.memetix.mst.language.Language;
 import com.memetix.mst.language.SpokenDialect;
 import com.memetix.mst.speak.Speak;
 import com.memetix.mst.translate.Translate;
@@ -125,6 +126,11 @@ public class Translator extends javax.swing.JFrame {
         );
 
         detectButton.setText("Detect Language");
+        detectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detectButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout detectPanelLayout = new javax.swing.GroupLayout(detectPanel);
         detectPanel.setLayout(detectPanelLayout);
@@ -257,18 +263,34 @@ public class Translator extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void translateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_translateButtonActionPerformed
-        // TODO add your handling code here:
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                translateText();
+            }
+        });
     }//GEN-LAST:event_translateButtonActionPerformed
 
     private void speakButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speakButtonActionPerformed
-        triggerAudio();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                triggerAudio();
+            }
+        });
     }//GEN-LAST:event_speakButtonActionPerformed
+
+    private void detectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detectButtonActionPerformed
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                detectLanguage();
+            }
+        });
+    }//GEN-LAST:event_detectButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        Translate.setKey("YOUR_API_KEY");
+        Translate.setKey("YOUR_API_KEY_HERE");
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
@@ -287,7 +309,23 @@ public class Translator extends javax.swing.JFrame {
             // Pass the input stream to the playClip method
             playClip(uc.getInputStream());
         } catch (Exception e){
-            JOptionPane.showMessageDialog(this, "Playing Speech: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Playing Speech : " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void translateText() {
+        try {
+            targetText.setText(Translate.execute(sourceText.getText().trim(), Language.ENGLISH, Language.FRENCH));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Performing Localization : " + ex.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void detectLanguage() {
+        try {
+            targetText.setText(Language.fromString(Detect.execute(sourceText.getText().trim())).getName(Language.ENGLISH));
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Detecting Language : " + ex.toString(),"Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
