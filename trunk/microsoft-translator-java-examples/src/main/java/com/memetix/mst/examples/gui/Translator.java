@@ -70,7 +70,9 @@ public class Translator extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         sourceText.setColumns(20);
+        sourceText.setLineWrap(true);
         sourceText.setRows(5);
+        sourceText.setWrapStyleWord(true);
         sourceScrollPane.setViewportView(sourceText);
 
         sourceLabel.setText("Text to Translate");
@@ -203,7 +205,9 @@ public class Translator extends javax.swing.JFrame {
         targetText.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
         targetText.setColumns(20);
         targetText.setEditable(false);
+        targetText.setLineWrap(true);
         targetText.setRows(5);
+        targetText.setWrapStyleWord(true);
         targetText.setFocusable(false);
         targetScrollPane.setViewportView(targetText);
 
@@ -290,7 +294,7 @@ public class Translator extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        Translate.setKey("YOUR_API_KEY_HERE");
+        Translate.setKey("YOUR_API_KEY");
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
