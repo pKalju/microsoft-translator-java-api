@@ -580,7 +580,7 @@ public class Translator extends javax.swing.JFrame {
     private final String LABEL_TRANSLATE_TARGET     = "Translation";
     private final String LABEL_TRANSLATE_BUTTON     = "Translate to";
     private final String LABEL_DETECT_BUTTON        = "Detect Language";
-    private final String LABEL_SPEAK_BUTTON         = "Detect Language";
+    private final String LABEL_SPEAK_BUTTON         = "Speak Text";
     private final String LABEL_MENU_FILE            = "File";
     private final String LABEL_MENU_LOCALIZATION    = "Localization";
     private final String LABEL_MENU_HELP            = "Help";
