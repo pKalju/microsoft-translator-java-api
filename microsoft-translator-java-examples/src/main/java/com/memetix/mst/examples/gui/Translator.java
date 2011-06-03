@@ -15,6 +15,7 @@ import com.memetix.mst.language.Language;
 import com.memetix.mst.language.SpokenDialect;
 import com.memetix.mst.speak.Speak;
 import com.memetix.mst.translate.Translate;
+import java.awt.Component;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -24,7 +25,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineEvent.Type;
 import javax.sound.sampled.LineListener;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 /**
  *
@@ -34,7 +39,9 @@ public class Translator extends javax.swing.JFrame {
 
     /** Creates new form Translator */
     public Translator() {
+        Translate.setKey("YOUR_API_KEY_GOES_HERE");
         initComponents();
+        populateLanguageComboBoxes();
     }
 
     /** This method is called from within the constructor to
@@ -294,7 +301,6 @@ public class Translator extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        Translate.setKey("YOUR_API_KEY");
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
@@ -305,7 +311,7 @@ public class Translator extends javax.swing.JFrame {
     
     private void triggerAudio() {
         try {
-            String sWavUrl = Speak.execute(sourceText.getText(), SpokenDialect.ENGLISH_INDIA);
+            String sWavUrl = Speak.execute(sourceText.getText(), (SpokenDialect)speakDialectBox.getSelectedItem());
             // Now, makes an HTTP Connection to get the InputStream
             final URL waveUrl = new URL(sWavUrl);
             final HttpURLConnection uc = (HttpURLConnection) waveUrl.openConnection();
@@ -319,7 +325,7 @@ public class Translator extends javax.swing.JFrame {
     
     private void translateText() {
         try {
-            targetText.setText(Translate.execute(sourceText.getText().trim(), Language.ENGLISH, Language.FRENCH));
+            targetText.setText(Translate.execute(sourceText.getText().trim(), Language.ENGLISH, (Language)translateLanguageBox.getSelectedItem()));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Performing Localization : " + ex.toString(),"Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -365,6 +371,60 @@ public class Translator extends javax.swing.JFrame {
           } finally {
             audioInputStream.close();
           }
+    }
+    
+    private void populateLanguageComboBoxes() {
+            final ComboBoxModel lModel = new DefaultComboBoxModel(Language.values());
+            translateLanguageBox.setModel(lModel);
+            translateLanguageBox.setRenderer(new LanguageRenderer());
+            
+            final ComboBoxModel dModel = new DefaultComboBoxModel(SpokenDialect.values());
+            speakDialectBox.setModel(dModel);
+            speakDialectBox.setRenderer(new SpokenDialectRenderer());
+    }
+    
+    class LanguageRenderer extends BasicComboBoxRenderer {
+        @Override
+        public Component getListCellRendererComponent(
+                JList list, 
+                Object value, 
+                int index, 
+                boolean isSelected, 
+                boolean cellHasFocus) 
+        {
+          super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+          if(value!=null) {
+              Language item= (Language) value;
+              try {
+                setText(item.getName(Language.ENGLISH));
+              } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Rendering Language List: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+              }
+          }
+          return this;  
+        }
+    }
+    
+    class SpokenDialectRenderer extends BasicComboBoxRenderer {
+        @Override
+        public Component getListCellRendererComponent(
+                JList list, 
+                Object value, 
+                int index, 
+                boolean isSelected, 
+                boolean cellHasFocus) 
+        {
+          super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+          if(value!=null) {
+              SpokenDialect item= (SpokenDialect) value;
+              try {
+                setText(item.getName(Language.ENGLISH));
+              } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Rendering Language List: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+              }
+          }
+          return this;  
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
