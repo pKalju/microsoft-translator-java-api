@@ -28,4 +28,11 @@
       <type>jar</type>
     </dependency>
   </dependencies>
+  <repositories>
+    <repository>
+        <id>sonatype-oss-repo</id>
+        <name>Sonatype Open Source maven snapshot repo</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+  </repositories>
 </project>
