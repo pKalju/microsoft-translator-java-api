@@ -21,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -35,6 +36,8 @@ import javax.swing.SwingUtilities;
  */
 public class TranslationGuiExample extends JFrame {
     final String[] langs = {"AUTO_DETECT","English","French"};
+    private JComboBox localeCombo;
+    private JPanel panel;
     
     public TranslationGuiExample() {
         Translate.setKey("YOUR_API_KEY_HERE");
@@ -56,7 +59,7 @@ public class TranslationGuiExample extends JFrame {
     }
     
     public final void buildGui() {
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         this.getContentPane().add(panel);
         this.setJMenuBar(buildMenuBar());
         
@@ -72,7 +75,8 @@ public class TranslationGuiExample extends JFrame {
         pane.getViewport().add( buildTextArea());
         panel.add(pane);
         
-        panel.add(buildComboBox());
+        localeCombo = buildComboBox();
+        panel.add(localeCombo);
     }
     
     ActionListener quitAction = new ActionListener() {
@@ -105,14 +109,29 @@ public class TranslationGuiExample extends JFrame {
     public final JComboBox buildComboBox() {
         JComboBox comboBox = new JComboBox();
         try {
-            ComboBoxModel model = new DefaultComboBoxModel(Language.values(Language.ENGLISH).keySet().toArray());
+            ComboBoxModel model = new DefaultComboBoxModel(Language.values(Language.ENGLISH).values().toArray());
             comboBox.setModel(model);
             comboBox.setSelectedIndex(0);
+            comboBox.addActionListener(localeChange);
         } catch(Exception e) {
-            //Error!
+            JOptionPane.showMessageDialog(panel, "Error Loading Languages: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
         }
         comboBox.setPreferredSize(new Dimension(140,22));
         comboBox.setMaximumSize(new Dimension(140,22));
         return comboBox;
     }
+    
+    ActionListener localeChange = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+            final JComboBox cb = (JComboBox)event.getSource();
+            Language localeCode = (Language)cb.getSelectedItem();
+            try {
+                ComboBoxModel model = new DefaultComboBoxModel(Language.values(localeCode).values().toArray());
+                cb.setModel(model);
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(panel, "Performing Localization: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }
+    };
 }
