@@ -13,6 +13,7 @@ package com.memetix.mst.examples.gui;
 import com.memetix.mst.MicrosoftAPI;
 import com.memetix.mst.language.SpokenDialect;
 import com.memetix.mst.speak.Speak;
+import com.memetix.mst.translate.Translate;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
