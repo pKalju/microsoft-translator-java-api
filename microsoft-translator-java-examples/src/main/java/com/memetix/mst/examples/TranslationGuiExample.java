@@ -5,13 +5,23 @@
 package com.memetix.mst.examples;
 
 import com.memetix.mst.language.Language;
-import com.memetix.mst.language.Language;
+import com.memetix.mst.language.SpokenDialect;
+import com.memetix.mst.speak.Speak;
 import com.memetix.mst.translate.Translate;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineEvent.Type;
+import javax.sound.sampled.LineListener;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -36,8 +46,13 @@ import javax.swing.SwingUtilities;
  */
 public class TranslationGuiExample extends JFrame {
     final String[] langs = {"AUTO_DETECT","English","French"};
+    
     private JComboBox localeCombo;
+    private JComboBox toLanguage;
     private JPanel panel;
+    private JTextArea toTextArea;
+    private JTextArea fromTextArea;
+    private JButton speakButton;
     
     public TranslationGuiExample() {
         Translate.setKey("YOUR_API_KEY_HERE");
@@ -66,29 +81,44 @@ public class TranslationGuiExample extends JFrame {
         //panel.setLayout(null);
         
         JButton quitButton = new JButton("Quit");
-        //quitButton.setBounds(50,60,80,30);
         quitButton.addActionListener(quitAction);
         
+        JButton speakButton = new JButton("Speak");
+        speakButton.addActionListener(speakAction);
+        
         panel.add(quitButton);
+        panel.add(speakButton);
         
         JScrollPane pane = new JScrollPane();
-        pane.getViewport().add( buildTextArea());
+        fromTextArea =  buildFromTextArea();
+        fromTextArea.addKeyListener(fromKeyListener);
+        toTextArea =    buildToTextArea();
+        pane.getViewport().add( fromTextArea);
+        toLanguage = buildComboBox();
+        panel.add( toLanguage );
+        panel.add( toTextArea);
         panel.add(pane);
         
         localeCombo = buildComboBox();
         panel.add(localeCombo);
     }
     
-    ActionListener quitAction = new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-            System.exit(0);
-        }
-    };
-    
-    public final JTextArea buildTextArea() {
+    private JTextArea buildToTextArea() {
         JTextArea area = new JTextArea();
         area.setLineWrap(true);
         area.setWrapStyleWord(true);
+        area.setColumns(40);
+        area.setRows(5);
+        area.setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
+        return area;
+    }
+    
+    private JTextArea buildFromTextArea() {
+        JTextArea area = new JTextArea();
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setColumns(40);
+        area.setRows(5);
         area.setBorder(BorderFactory.createEmptyBorder(8,8,8,8));
         return area;
     }
@@ -121,6 +151,19 @@ public class TranslationGuiExample extends JFrame {
         return comboBox;
     }
     
+    KeyAdapter fromKeyListener = new java.awt.event.KeyAdapter() {
+        public void keyPressed(java.awt.event.KeyEvent evt) {
+            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                try {
+                    toTextArea.setText(Translate.execute(fromTextArea.getText().trim(), Language.ENGLISH, Language.FRENCH));
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(panel, "Performing Localization: " + ex.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+                }
+                evt.consume();
+            }
+        }
+    };
+    
     ActionListener localeChange = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
             final JComboBox cb = (JComboBox)event.getSource();
@@ -134,4 +177,64 @@ public class TranslationGuiExample extends JFrame {
             
         }
     };
+    
+    ActionListener quitAction = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+            System.exit(0);
+        }
+    };
+    
+    ActionListener speakAction = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+            triggerAudio();
+        }
+    };
+    
+    private void triggerAudio() {
+        try {
+            String sWavUrl = Speak.execute(fromTextArea.getText(), SpokenDialect.ENGLISH_INDIA);
+            // Now, makes an HTTP Connection to get the InputStream
+            final URL waveUrl = new URL(sWavUrl);
+            final HttpURLConnection uc = (HttpURLConnection) waveUrl.openConnection();
+
+            // Pass the input stream to the playClip method
+            playClip(uc.getInputStream());
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(panel, "Playing Speech: " + e.toString(),"Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private static void playClip(InputStream is) throws Exception {
+        class AudioListener implements LineListener {
+            private boolean done = false;
+            @Override public synchronized void update(LineEvent event) {
+              Type eventType = event.getType();
+              if (eventType == Type.STOP || eventType == Type.CLOSE) {
+                done = true;
+                notifyAll();
+              }
+            }
+            public synchronized void waitUntilDone() throws InterruptedException {
+              while (!done) { wait(); }
+            }
+        }
+        
+        AudioListener listener = new AudioListener();
+        
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(is);
+        
+          try {
+            Clip clip = AudioSystem.getClip();
+            clip.addLineListener(listener);
+            clip.open(audioInputStream);
+            try {
+              clip.start();
+              listener.waitUntilDone();
+            } finally {
+              clip.close();
+            }
+          } finally {
+            audioInputStream.close();
+          }
+    }
 }
