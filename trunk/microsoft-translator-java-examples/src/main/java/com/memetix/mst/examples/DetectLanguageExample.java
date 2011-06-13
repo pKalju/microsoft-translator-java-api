@@ -34,22 +34,19 @@ public class DetectLanguageExample {
     {
         Detect.setKey("YOUR_API_KEY_HERE");
         
-        //Detect returns a String representing the language code (Note: this should change in 0.4, it should return a full-blown Language enum instance)
-        String detectedLanguage = Detect.execute("Bonjour le monde");
+        //Detect returns a Language Enum representing the language code
+        Language detectedLanguage = Detect.execute("Bonjour le monde");
         
         // Prints out the language code
         System.out.println(detectedLanguage);
         
-        // Gets the Language Enum instance from the code string
-        Language lDetected = Language.fromString(detectedLanguage);
-        
         //Prints the Language name in English - "French"
-        System.out.println(lDetected.getName(Language.ENGLISH));
+        System.out.println(detectedLanguage.getName(Language.ENGLISH));
         
         //Prints the Language name in French - "Français"
-        System.out.println(lDetected.getName(Language.FRENCH));
+        System.out.println(detectedLanguage.getName(Language.FRENCH));
         
         //Prints the Language name in German - "Französisch"
-        System.out.println(lDetected.getName(Language.GERMAN));
+        System.out.println(detectedLanguage.getName(Language.GERMAN));
     }
 }
