@@ -60,7 +60,8 @@ public class SpeakTextExample {
     private static void playClip(InputStream is) throws Exception {
         class AudioListener implements LineListener {
             private boolean done = false;
-            @Override public synchronized void update(LineEvent event) {
+            
+            public synchronized void update(LineEvent event) {
               Type eventType = event.getType();
               if (eventType == Type.STOP || eventType == Type.CLOSE) {
                 done = true;
