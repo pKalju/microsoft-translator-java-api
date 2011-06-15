@@ -1,4 +1,6 @@
 /*
+ * microsoft-translator-java-api-examples
+ * 
  * Copyright 2011 Jonathan Griggs <jonathan.griggs at gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +62,7 @@ public class Translator extends javax.swing.JFrame {
 	/** Creates new form Translator */
     public Translator() {
         // Don't forget to set the API KEY!
-        Translate.setKey("YOUR_API_KEY_GOES_HERE");
+        Translate.setKey("0B4B2CAA973775DBE72569A29C1A08DA55C88441");
         initComponents();
         populateLocalizationMenu();
         localizeLabels();
