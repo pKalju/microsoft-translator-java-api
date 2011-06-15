@@ -62,7 +62,7 @@ public class Translator extends javax.swing.JFrame {
 	/** Creates new form Translator */
     public Translator() {
         // Don't forget to set the API KEY!
-        Translate.setKey("0B4B2CAA973775DBE72569A29C1A08DA55C88441");
+        Translate.setKey("YOUR_API_KEY_HERE");
         initComponents();
         populateLocalizationMenu();
         localizeLabels();
