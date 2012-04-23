@@ -32,8 +32,9 @@ import com.memetix.mst.translate.Translate;
 public class TranslateExample 
 {
     public static void main( String[] args ) throws Exception {
-        // Set the API key once per JVM. It is set statically and applies to all services
-        Translate.setKey("YOUR_API_KEY_HERE");
+        // Set the Client ID / Client Secret once per JVM. It is set statically and applies to all services
+        Translate.setClientId("YOUR_CLIENT_ID_HERE");
+        Translate.setClientSecret("YOUR_CLIENT_SECRET_HERE");
         
         // From French -> English 
         String translatedText = Translate.execute("Bonjour le monde", Language.FRENCH, Language.ENGLISH);
