@@ -44,7 +44,9 @@ public class SpeakTextExample {
     
     public static void main( String[] args ) throws Exception
     {
-        Speak.setKey("YOUR_API_KEY_HERE");
+        // Set the Client ID / Client Secret once per JVM. It is set statically and applies to all services
+        Speak.setClientId("YOUR_CLIENT_ID_HERE");
+        Speak.setClientSecret("YOUR_CLIENT_SECRET_HERE");
         // Calls the speak service with text to be spoken and specifies the dialect in which to speak it
         String sWavUrl = Speak.execute("Did you enjoy the 2011 Cricket World Cup?", SpokenDialect.ENGLISH_INDIA);
         
