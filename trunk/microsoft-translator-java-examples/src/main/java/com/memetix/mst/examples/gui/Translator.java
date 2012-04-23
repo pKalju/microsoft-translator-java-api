@@ -61,8 +61,9 @@ public class Translator extends javax.swing.JFrame {
 
 	/** Creates new form Translator */
     public Translator() {
-        // Don't forget to set the API KEY!
-        Translate.setKey("YOUR_API_KEY_HERE");
+        // Set the Client ID / Client Secret once per JVM. It is set statically and applies to all services
+        Translate.setClientId("YOUR_CLIENT_ID_HERE");
+        Translate.setClientSecret("YOUR_CLIENT_SECRET_HERE");
         initComponents();
         populateLocalizationMenu();
         localizeLabels();
