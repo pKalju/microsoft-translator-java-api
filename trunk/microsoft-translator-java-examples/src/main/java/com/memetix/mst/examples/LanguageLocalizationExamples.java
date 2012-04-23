@@ -33,8 +33,9 @@ import java.util.Map;
 public class LanguageLocalizationExamples {
     public static void main( String[] args ) throws Exception
     {
-        //Don't forget to set the API Key
-        Language.setKey("YOUR_API_KEY");
+        // Set the Client ID / Client Secret once per JVM. It is set statically and applies to all services
+        Language.setClientId("YOUR_CLIENT_ID_HERE");
+        Language.setClientSecret("YOUR_CLIENT_SECRET_HERE");
         
         //Get the all the values in the enum and print the non-localized name (i.e. the literal name of the Enum constant)
         // this is the default way of dealing with lists of enums, but not the most user friendly way to construct a list
