@@ -35,8 +35,9 @@ import com.memetix.mst.translate.Translate;
 public class TranslateArrayExample 
 {
     public static void main( String[] args ) throws Exception {
-        // Set the API key once per JVM. It is set statically and applies to all services
-        Translate.setKey("YOUR_API_KEY_HERE");
+        // Set the Client ID / Client Secret once per JVM. It is set statically and applies to all services
+        Translate.setClientId("YOUR_CLIENT_ID_HERE");
+        Translate.setClientSecret("YOUR_CLIENT_SECRET_HERE");
         
         //Create your array of texts to be translated
         // NOTE: The source language of all texts must be the same. For instance, I cannot translate
