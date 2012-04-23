@@ -34,7 +34,9 @@ import com.memetix.mst.language.Language;
 public class DetectLanguageExample {
     public static void main( String[] args ) throws Exception
     {
-        Detect.setKey("YOUR_API_KEY_HERE");
+        // Set the Client ID / Client Secret once per JVM. It is set statically and applies to all services
+        Detect.setClientId("YOUR_CLIENT_ID_HERE");
+        Detect.setClientSecret("YOUR_CLIENT_SECRET_HERE");
         
         //Detect returns a Language Enum representing the language code
         Language detectedLanguage = Detect.execute("Bonjour le monde");
